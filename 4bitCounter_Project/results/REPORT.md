@@ -27,7 +27,7 @@ The waveform confirms proper counter operation:
 - Counting begins only when `enable` is high
 - Output `count[3:0]` increments every clock cycle
 
-![Waveform Screenshot](../results/counter_waveform.png)
+![Waveform Screenshot](counter_4b_wave.png)
 
 ## Summary
 
