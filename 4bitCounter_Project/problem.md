@@ -5,7 +5,6 @@ Design and simulate a 4-bit synchronous up-counter in SystemVerilog with the fol
 - The counter **resets to zero** when `reset` is asserted (active-high).
 - Counter stops counting if `enable` is low.
 
-This module demonstrates basic sequential logic using `always_ff` and provides waveform output for educational use.
 
 ### Truth Table 
 
