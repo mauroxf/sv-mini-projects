@@ -20,7 +20,7 @@ Each mini project includes:
 - `*.sv` — SystemVerilog source files  
 - `*_tb.sv` — Testbench files  
 - `problem.md` — Problem statement and bash for compiling/sim
-- `results` - Folder that includes images and a final report
+- `results` - Folder that includes images and a final report `REPORT.md`
 
 ---
 
