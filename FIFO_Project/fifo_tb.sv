@@ -2,19 +2,16 @@
 
 module fifo_tb;
 
-  // Parameters
+  // Local parameters
   localparam DATA_WIDTH = 8;
   localparam DEPTH = 16;
+  localparam ADDR_WIDTH = $clog2(DEPTH);
 
   // DUT signals
-  logic clk;
-  logic rst_n;
-  logic wr_en;
-  logic rd_en;
+  logic clk, rst_n, wr_en, rd_en;
   logic [DATA_WIDTH-1:0] wr_data;
   logic [DATA_WIDTH-1:0] rd_data;
-  logic full;
-  logic empty;
+  logic full, empty;
 
   // Instantiate FIFO
   fifo #(
@@ -36,7 +33,11 @@ module fifo_tb;
 
   // Stimulus
   initial begin
-    // Init
+
+    $dumpfile("fifo_wave.vcd");
+    $dumpvars(0, fifo_tb);
+
+    // Initialize zeros
     clk = 0;
     rst_n = 0;
     wr_en = 0;
@@ -44,38 +45,41 @@ module fifo_tb;
     wr_data = 0;
 
     // Reset
-    #12;
+    @(posedge clk); 
     rst_n = 1;
 
-    // Write 5 values
-    for (int i = 0; i < 5; i++) begin
-      @(posedge clk);
+    // WRITE 4 values: 11, 22, 33, 44
+    repeat (4) begin
       wr_en = 1;
-      wr_data = i * 10; // write 0, 10, 20, 30, 40
+      wr_data = wr_data + 8'd11;
+      @(posedge clk);
     end
-
-    @(posedge clk);
     wr_en = 0;
 
-    // Wait a couple cycles
-    repeat (2) @(posedge clk);
+    // Wait 2 cycles for accuracy 
+    @(posedge clk); @(posedge clk);
 
-    // Read back 5 values
-    for (int i = 0; i < 5; i++) begin
-      @(posedge clk);
+    // READ 4 values
+    repeat (4) begin
       rd_en = 1;
-      #1 $display("Read data: %0d", rd_data);
+      @(posedge clk);
     end
-
-    @(posedge clk);
     rd_en = 0;
-    
-    $dumpfile("fifo_wave.vcd");
-    $dumpvars(0, fifo_tb);
 
-    // Done
-    #10;
+    // Finish
+    #20;
     $finish;
   end
+
+  // Output for debug/verification
+  always_ff @(posedge clk) begin
+  if (wr_en && !full) begin
+    $display("Time %0t: Wrote data = %0d", $time, wr_data);
+  end
+  if (rd_en && !empty) begin
+    $display("Time %0t: Read data = %0d", $time, rd_data);
+  end
+  end
+  
 
 endmodule
